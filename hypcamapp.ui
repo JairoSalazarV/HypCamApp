@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>492</width>
-    <height>546</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="palette">
@@ -437,7 +437,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
+      <y>150</y>
       <width>130</width>
       <height>130</height>
      </rect>
@@ -571,7 +571,7 @@
     <property name="geometry">
      <rect>
       <x>181</x>
-      <y>190</y>
+      <y>150</y>
       <width>130</width>
       <height>130</height>
      </rect>
@@ -639,7 +639,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>350</y>
+      <y>310</y>
       <width>130</width>
       <height>130</height>
      </rect>
@@ -693,7 +693,7 @@
     <property name="icon">
      <iconset resource="images.qrc">
       <normaloff>:/androidImages/Video.png</normaloff>
-      <disabledoff>:/androidImages/camConnection.png</disabledoff>:/androidImages/Video.png</iconset>
+      <disabledoff>:/androidImages/Video.png</disabledoff>:/androidImages/Video.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -706,7 +706,7 @@
     <property name="geometry">
      <rect>
       <x>337</x>
-      <y>190</y>
+      <y>150</y>
       <width>130</width>
       <height>130</height>
      </rect>
@@ -760,7 +760,7 @@
     <property name="icon">
      <iconset resource="images.qrc">
       <normaloff>:/androidImages/newFile.png</normaloff>
-      <disabledoff>:/androidImages/camConnection.png</disabledoff>:/androidImages/newFile.png</iconset>
+      <disabledoff>:/androidImages/newFile.png</disabledoff>:/androidImages/newFile.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -773,7 +773,7 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>350</y>
+      <y>310</y>
       <width>130</width>
       <height>130</height>
      </rect>
@@ -827,7 +827,142 @@
     <property name="icon">
      <iconset resource="images.qrc">
       <normaloff>:/androidImages/photo.png</normaloff>
-      <disabledoff>:/androidImages/camConnection.png</disabledoff>:/androidImages/photo.png</iconset>
+      <disabledoff>:/androidImages/photo.png</disabledoff>:/androidImages/photo.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>130</width>
+      <height>130</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbExit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>150</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Light">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>238</red>
+          <green>238</green>
+          <blue>236</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Light">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>238</red>
+          <green>238</green>
+          <blue>236</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Light">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>238</red>
+          <green>238</green>
+          <blue>236</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="whatsThis">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera connection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>:/imagenInte/zoom-in.png</normaloff>
+      <normalon>:/androidImages/exit.png</normalon>
+      <disabledoff>:/androidImages/exit.png</disabledoff>:/imagenInte/zoom-in.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>160</width>
+      <height>160</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbSynSettings">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>300</y>
+      <width>130</width>
+      <height>130</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Light">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>238</red>
+          <green>238</green>
+          <blue>236</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Light">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>238</red>
+          <green>238</green>
+          <blue>236</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Light">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>238</red>
+          <green>238</green>
+          <blue>236</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="whatsThis">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera connection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="images.qrc">
+      <normaloff>:/androidImages/syncSettings.png</normaloff>
+      <disabledoff>:/androidImages/syncSettings.png</disabledoff>:/androidImages/syncSettings.png</iconset>
     </property>
     <property name="iconSize">
      <size>

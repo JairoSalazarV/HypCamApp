@@ -1,6 +1,7 @@
 #include "formcreatenewfile.h"
 #include "ui_formcreatenewfile.h"
 #include <__common.h>
+#include <QFileDialog>
 
 formCreateNewFile::formCreateNewFile(QWidget *parent) :
     QDialog(parent),
@@ -51,4 +52,26 @@ void formCreateNewFile::on_pbSave_clicked()
         funcShowMsg("SUCCESS","File Created Successfully!");
     }
 
+}
+
+void formCreateNewFile::on_pbOpen_clicked()
+{
+    this->setVisible(false);
+
+
+    QString filePath = QFileDialog::getOpenFileName(
+                                                        this,
+                                                        tr("Select File..."),
+                                                        "./",
+                                                        "(*.*);;"
+                                                     );
+    if( !filePath.isEmpty() ){
+        ui->txtFilename->setText(filePath);
+
+        QString Contain;
+        Contain = readAllFile(filePath);
+        ui->txtContain->setPlainText(Contain);
+    }
+
+    this->setVisible(true);
 }

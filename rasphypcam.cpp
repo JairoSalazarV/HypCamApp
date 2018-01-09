@@ -365,16 +365,16 @@ std::string *genCommand(strReqImg *reqImg, const std::string& fileName)
     tmpCommand->append(" -h " + ss.str());
 
     //AWB
-    if(strcmp((char*)reqImg->raspSett.AWB, "none")!=0){
-        std::string sAWB((char*)reqImg->raspSett.AWB, sizeof(reqImg->raspSett.AWB));
+    std::string sAWB((char*)reqImg->raspSett.AWB, sizeof(reqImg->raspSett.AWB));
+    if( strcmp(sAWB.c_str(),"none") != 0 ){
         tmpCommand->append(" -awb ");
         tmpCommand->append(sAWB.c_str());
         //printf("Entro a AWB: %s\n",sAWB.c_str());
     }
 
     //Exposure
-    if(strcmp((char*)reqImg->raspSett.Exposure, "none")!=0){
-        std::string sExposure((char*)reqImg->raspSett.Exposure, sizeof(reqImg->raspSett.Exposure));
+    std::string sExposure((char*)reqImg->raspSett.Exposure, sizeof(reqImg->raspSett.Exposure));
+    if( strcmp(sExposure.c_str(),"none") != 0 ){
         tmpCommand->append(" -ex ");
         tmpCommand->append(sExposure.c_str());
         //printf("Entro a Exp: %s\n",sExposure.c_str());

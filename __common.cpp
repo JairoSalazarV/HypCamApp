@@ -19,7 +19,7 @@
 #include <QFileDialog>
 
 //#include <iostream>
-//#include <fstream>
+#include <fstream>
 
 #include <QPixmap>
 //#include <graphicsview.h>
@@ -1083,7 +1083,6 @@ bool saveBinFile(unsigned long datasize, unsigned char *dataPtr, QString directo
     return true;
 }
 
-/*
 int saveBinFile_From_u_int8_T( std::string fileName, uint8_t *data, size_t len)
 {
     std::ofstream fp;
@@ -1091,7 +1090,7 @@ int saveBinFile_From_u_int8_T( std::string fileName, uint8_t *data, size_t len)
     fp.write((char*)data, len);
     fp.close();
     return 1;
-}*/
+}
 
 int fileExists( QString fileName )
 {

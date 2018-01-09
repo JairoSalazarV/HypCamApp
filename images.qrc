@@ -16,5 +16,7 @@
         <file>androidImages/photo3.png</file>
         <file>androidImages/photo2.png</file>
         <file>androidImages/photo.png</file>
+        <file>androidImages/exit.png</file>
+        <file>androidImages/syncSettings.png</file>
     </qresource>
 </RCC>

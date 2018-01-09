@@ -8,7 +8,7 @@
 
 structRaspcamSettings *raspcamSettings = (structRaspcamSettings*)malloc(sizeof(structRaspcamSettings));
 
-QWidget *settingsParent;
+//QWidget *settingsParent;
 
 formSettings::formSettings(QWidget *parent) :
     QDialog(parent),
@@ -33,8 +33,8 @@ formSettings::formSettings(QWidget *parent) :
     }
 
     //Hide Parent
-    settingsParent = parent;
-    settingsParent->setVisible(false);
+    //settingsParent = parent;
+    //settingsParent->setVisible(false);
 
 
 
@@ -47,7 +47,7 @@ formSettings::~formSettings()
 
 void formSettings::on_pbCopyShutter_clicked()
 {    
-    settingsParent->setVisible(true);
+    //settingsParent->setVisible(true);
     this->close();
 }
 
@@ -212,6 +212,9 @@ void formSettings::funcIniCamParam( structRaspcamSettings *raspcamSettings )
 
     //SquareShuterSpeed
     ui->spinBoxSquareShuterSpeed->setValue(raspcamSettings->SquareShutterSpeedMs);
+
+    //Video Duration
+    ui->spinBoxVideoDuration->setValue( raspcamSettings->VideoDurationSecs );
 
     //Timelapse Duration
     ui->spinBoxTimelapseDuration->setValue( raspcamSettings->TimelapseDurationSecs );

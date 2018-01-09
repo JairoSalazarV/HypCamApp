@@ -20,6 +20,8 @@ private slots:
 
     void on_pbSave_clicked();
 
+    void on_pbOpen_clicked();
+
 private:
     Ui::formCreateNewFile *ui;
 };

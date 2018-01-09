@@ -73,6 +73,14 @@ private slots:
 
     structRaspcamSettings funcFillSnapshotSettings( structRaspcamSettings raspSett );
 
+    void on_pbExit_clicked();
+
+    void on_pbSynSettings_clicked();
+
+    int obtainFile(std::string remoteFile, std::string localFile );
+
+    u_int8_t* funcQtReceiveFile(std::string fileNameRequested, int* fileLen );
+
 private:
     Ui::HypCamApp *ui;
 };

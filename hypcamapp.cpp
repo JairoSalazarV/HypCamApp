@@ -74,19 +74,21 @@ void HypCamApp::on_pbCamConn_clicked()
 
 void HypCamApp::on_pbShutdown_clicked()
 {
-    std::string cmdShutdown = "sudo shutdown -h now";
-    bool ok;
-
-    funcRemoteTerminalCommand(cmdShutdown,camSelected,0,false,&ok);
-    if(ok == true)
+    if( funcShowMsgYesNo("ALERT","Turn off the Camera?") == 1 )
     {
-        funcShowMsg("SUCCESS","Camera Off");
-    }
-    else
-    {
-        funcShowMsgERROR("Command Not Applied");
-    }
+        std::string cmdShutdown = "sudo shutdown -h now";
+        bool ok;
 
+        funcRemoteTerminalCommand(cmdShutdown,camSelected,0,false,&ok);
+        if(ok == true)
+        {
+            funcShowMsg("SUCCESS","Camera Off");
+        }
+        else
+        {
+            funcShowMsgERROR("Command Not Applied");
+        }
+    }
 }
 
 std::string HypCamApp::funcRemoteTerminalCommand(
@@ -606,20 +608,19 @@ QString HypCamApp::genRemoteVideoCommand(structRaspcamSettings* raspcamSettings,
     //.................................
     //AWB
     //.................................
-    QString tmpString;
-    tmpString.clear();
-    tmpString.append((const char*)raspcamSettings->AWB);
-    if( tmpString == "none" ){
-        tmpCommand.append(" -awb " + tmpString);
+    std::string sAWB((char*)raspcamSettings->AWB, sizeof(raspcamSettings->AWB));
+    if( strcmp(sAWB.c_str(),"none") != 0 ){
+        tmpCommand.append(" -awb ");
+        tmpCommand.append(sAWB.c_str());
     }
 
     //.................................
     //Exposure
     //.................................
-    tmpString.clear();
-    tmpString.append((const char*)raspcamSettings->Exposure);
-    if( tmpString != "none" ){
-        tmpCommand.append(" -ex " + tmpString);
+    std::string sExposure((char*)raspcamSettings->Exposure, sizeof(raspcamSettings->Exposure));
+    if( strcmp(sExposure.c_str(),"none") != 0 ){
+        tmpCommand.append(" -ex ");
+        tmpCommand.append(sExposure.c_str());
     }
 
     //.................................
@@ -841,7 +842,104 @@ structRaspcamSettings HypCamApp::funcFillSnapshotSettings( structRaspcamSettings
     return raspSett;
 }
 
+void HypCamApp::on_pbExit_clicked()
+{
+    if( funcShowMsgYesNo("ALERT","Do you really want to EXIT?") == 1 )
+    {
+        QGuiApplication::quit();
+    }
+}
+
+void HypCamApp::on_pbSynSettings_clicked()
+{
+    if( obtainFile( _PATH_REMOTE_SLIDESETTINGS, _PATH_LOCAL_SLIDESETTINGS ) )
+        funcShowMsgSUCCESS_Timeout("Synchronization Successfully");
+    else
+        funcShowMsgERROR_Timeout("Sorry, Synchronization not Completed");
+}
 
 
+int HypCamApp::obtainFile(std::string remoteFile, std::string localFile )
+{
+    if( funcRaspFileExists( remoteFile ) == 0 )
+    {
+        debugMsg("File does not exists");
+        return _ERROR;
+    }
+    else
+    {
+        int fileLen = 0;
+        u_int8_t* fileReceived = funcQtReceiveFile( remoteFile, &fileLen );
+
+        //funcShowMsg_Timeout("",QString::fromStdString(remoteFile));
+
+        //funcShowMsg_Timeout("fileLen",QString::number(fileLen));
+
+        if( saveBinFile_From_u_int8_T(localFile,fileReceived,fileLen) )
+            return _OK;
+        else
+            return _ERROR;
+    }
+    return _OK;
+}
+
+u_int8_t* HypCamApp::funcQtReceiveFile( std::string fileNameRequested, int* fileLen )
+{
+
+    //It assumes that file exists and this was verified by command 10
+    //
+    //Receive the path of a file into raspCamera and
+    //return the file if exists or empty arry otherwise
+    *fileLen = 0;
+
+    //Connect to socket
+    int socketID = connectSocket( camSelected );
+    if( socketID == -1 )
+    {
+        funcShowMsgERROR_Timeout("ERROR connecting to socket");
+        return (u_int8_t*)NULL;
+    }
+
+    //Request file
+    int n;
+    strReqFileInfo *reqFileInfo = (strReqFileInfo*)malloc(sizeof(strReqFileInfo));
+    memset( reqFileInfo, '\0', sizeof(strReqFileInfo) );
+    reqFileInfo->idMsg          = 11;
+    reqFileInfo->fileNameLen    = fileNameRequested.size();
+    memcpy( &reqFileInfo->fileName[0], fileNameRequested.c_str(), fileNameRequested.size() );
+    int tmpFrameLen = sizeof(strReqFileInfo);//IdMsg + lenInfo + fileLen + padding
+    n = ::write( socketID, reqFileInfo, tmpFrameLen+1 );
+    if (n < 0){
+        funcShowMsgERROR_Timeout("ERROR writing to socket");
+        return (u_int8_t*)NULL;
+    }
+
+    //Receive file's size
+    *fileLen = funcReceiveOnePositiveInteger( socketID );
+    if( *fileLen < 1 )
+        funcShowMsgERROR_Timeout("*fileLen = " + QString::number(*fileLen));    
+
+    //Prepare container
+    u_int8_t* theFILE = (u_int8_t*)malloc(*fileLen);
+    bzero( &theFILE[0], *fileLen );
+
+    //Read file from system buffer
+    int filePos     = 0;
+    int remainder   = *fileLen;
+
+    //Read image from buffer
+    while( remainder > 0 )
+    {
+        n = read(socketID,(void*)&theFILE[filePos],remainder);
+        remainder   -= n;
+        filePos     += n;
+    }
+
+    //Close connection
+    ::close(socketID);
+
+    //Return file
+    return theFILE;
 
 
+}

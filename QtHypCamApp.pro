@@ -27,7 +27,11 @@ SOURCES += \
         main.cpp \
         hypcamapp.cpp \
     __common.cpp \
-    hypCamAPI.cpp
+    hypCamAPI.cpp \
+    formsettings.cpp \
+    rasphypcam.cpp \
+    formtimertxt.cpp \
+    formcreatenewfile.cpp
 
 HEADERS += \
         hypcamapp.h \
@@ -37,10 +41,17 @@ HEADERS += \
     lstStructs.h \
     lstcustoms.h \
     lstraspividstruct.h \
-    hypCamAPI.h
+    hypCamAPI.h \
+    formsettings.h \
+    rasphypcam.h \
+    formtimertxt.h \
+    formcreatenewfile.h
 
 FORMS += \
-        hypcamapp.ui
+        hypcamapp.ui \
+    formsettings.ui \
+    formtimertxt.ui \
+    formcreatenewfile.ui
 
 CONFIG += mobility
 MOBILITY = 

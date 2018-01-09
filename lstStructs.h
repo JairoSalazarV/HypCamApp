@@ -7,6 +7,7 @@
     #include <lstpaths.h>
     #include <lstcustoms.h>
     #include <lstraspividstruct.h>
+    #include <QList>
 
 
 
@@ -384,6 +385,36 @@
         float   extraW=0.3;
         float   shiftAllowed;//%[0,0.8]: Recomended [0,0.5]
     }structSlideHypCube;
+
+    typedef struct lstDoubleAxisCalibration{
+        QString         bkgPath;
+        int             W;
+        int             H;
+        float           bigX;
+        float           bigY;
+        float           bigW;
+        float           bigH;
+        float           squareX;
+        float           squareY;
+        float           squareW;
+        float           squareH;
+        int             squarePixX;
+        int             squarePixY;
+        int             squarePixW;
+        int             squarePixH;
+        int             squareUsableX;      //Respect to the snapshot
+        int             squareUsableY;      //Respect to the snapshot
+        int             squareUsableW;      //Respect to the snapshot
+        int             squareUsableH;      //Respect to the snapshot
+        float           minWavelength;
+        float           maxWavelength;
+        int             maxNumBands;
+        double          minSpecRes;
+        strAllLinReg    LR;
+        QList<double>   Sr;
+        QList<double>   Sg;
+        QList<double>   Sb;
+    }lstDoubleAxisCalibration;
 
 
 

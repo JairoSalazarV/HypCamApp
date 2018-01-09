@@ -36,6 +36,43 @@ private slots:
                             unsigned char *tmpFile
                         );
 
+    void on_pbSettings_clicked();
+
+    void funcShowMsg_Timeout(QString title, QString msg, int ms);
+    void funcShowMsg_Timeout(QString title, QString msg);
+
+    void funcShowMsgSUCCESS_Timeout(QString msg, int ms);
+    void funcShowMsgSUCCESS_Timeout(QString msg);
+
+    void funcShowMsgERROR_Timeout(QString msg, int ms);
+    void funcShowMsgERROR_Timeout(QString msg);
+
+    void on_pbVideo_clicked();
+
+    void funcMainCall_RecordVideo(QString* videoID, bool defaultPath=false, bool ROI=true);
+
+    int funcGetRaspCamParameters();
+
+    int funcValidateFileDirNameDuplicated(QString remoteFile, QString localFile);
+
+    QString funcGetSyncFolder();
+
+    cameraResolution* getCamRes(int camResSetting);
+
+    QString genRemoteVideoCommand(structRaspcamSettings *raspcamSettings, QString remoteVideo, bool ROI=true);
+
+    int funcDisplayTimer(QString title, int timeMs, QColor color);
+
+    void on_pbCreateFile_clicked();
+
+    void on_pbSnapshot_clicked();
+
+    void funcMainCall_GetSnapshot();
+
+    int takeRemoteSnapshot( QString fileDestiny, bool squareArea );
+
+    structRaspcamSettings funcFillSnapshotSettings( structRaspcamSettings raspSett );
+
 private:
     Ui::HypCamApp *ui;
 };

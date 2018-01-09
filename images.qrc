@@ -6,5 +6,15 @@
         <file>androidImages/settings.png</file>
         <file>androidImages/Circle-icons-settings.svg.png</file>
         <file>androidImages/checkCamera.png</file>
+        <file>androidImages/delete-icon.png</file>
+        <file>androidImages/Save-icon.png</file>
+        <file>androidImages/open-file-icon.png</file>
+        <file>androidImages/hypCube.png</file>
+        <file>androidImages/Video.png</file>
+        <file>androidImages/newFile.png</file>
+        <file>androidImages/testCamera.png</file>
+        <file>androidImages/photo3.png</file>
+        <file>androidImages/photo2.png</file>
+        <file>androidImages/photo.png</file>
     </qresource>
 </RCC>

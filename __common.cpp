@@ -597,7 +597,8 @@ bool funcGetRaspParamFromXML( structRaspcamSettings *raspcamSettings, QString fi
                       );
             }
 
-
+            if( xmlReader->name()=="VideoDurationSecs" )
+                raspcamSettings->VideoDurationSecs = xmlReader->readElementText().toInt(0);
             if( xmlReader->name()=="Brightness" )
                 raspcamSettings->Brightness = xmlReader->readElementText().toInt(0);
             if( xmlReader->name()=="Sharpness" )
@@ -1776,7 +1777,7 @@ QString funcGetParam(QString field)
 void funcSetFileDB()
 {
     QList<QString> lstFolders;
-    lstFolders << "XML" << "SYNC";
+    lstFolders << "XML" << "SYNC" << "./XML/camPerfils/" << "settings" << "./settings/lastPaths/" << "./settings/NDVI/";
     for( int i=0; i<lstFolders.size(); i++ )
     {
         if( !QDir( lstFolders.at(i) ).exists() )
@@ -1786,6 +1787,9 @@ void funcSetFileDB()
         }
     }
 }
+
+
+
 
 
 

@@ -7,5 +7,4 @@
 
     #define     _FILENAME_SLIDE_DIR_TIME             "time.hypparam"
 
-
 #endif // LSTFILENAMES_H

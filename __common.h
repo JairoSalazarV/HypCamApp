@@ -184,6 +184,7 @@
     static cameraResolution* camRes = (cameraResolution*)malloc(sizeof(cameraResolution));
 
     QString funcGetParam(QString field);
+    QString funcGetParam(QString field, QString defaultValue, bool *ok);
 
 
 

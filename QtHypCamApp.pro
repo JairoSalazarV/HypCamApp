@@ -45,7 +45,8 @@ HEADERS += \
     formsettings.h \
     rasphypcam.h \
     formtimertxt.h \
-    formcreatenewfile.h
+    formcreatenewfile.h \
+    lstpaths.h
 
 FORMS += \
         hypcamapp.ui \

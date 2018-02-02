@@ -683,14 +683,24 @@ void HypCamApp::funcMainCall_GetSnapshot()
     //---------------------------------------------------
     //Get Snapshot-ID Destine
     //---------------------------------------------------
-    QString fileName;
-    fileName = funcGetParam("Snapshot-ID");
+    //DayTime Format
+    QString fileName = QDateTime::currentDateTime().toString("ddMMyyyy_HHmmss");
+    bool ok;
+    fileName = funcGetParam("Snapshot-ID",fileName, &ok);
     if(fileName.isEmpty())
     {
-        funcShowMsgERROR_Timeout("Invalid Snapshot-ID");
+        if(ok==true)
+        {
+            funcShowMsgERROR_Timeout("Invalid Snapshot-ID");
+        }
         this->setVisible(true);
         return (void)false;
     }
+
+    //---------------------------------------------------
+    //Save Last Filename
+    //---------------------------------------------------
+    saveFile(_FILENAME_LAST_SNAPSHOT,fileName);
 
     //---------------------------------------------------
     //Validate File/Dir Name

@@ -1773,6 +1773,14 @@ QString funcGetParam(QString field)
                                                         "", &ok);
 }
 
+QString funcGetParam(QString field, QString defaultValue, bool *ok = Q_NULLPTR)
+{
+    //bool ok;
+    return QInputDialog::getText(NULL, "Input required...",
+                                                        field+":", QLineEdit::Normal,
+                                                        defaultValue, ok);
+}
+
 void funcSetFileDB()
 {
     QList<QString> lstFolders;

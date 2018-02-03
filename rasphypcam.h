@@ -6,6 +6,18 @@
 
 #include <lstStructs.h>
 
+#include <QProgressBar>
+//Set Camera Default Parameters
+//structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+
+bool funcReceiveFile(
+                        int sockfd,
+                        unsigned int fileLen,
+                        unsigned char *bufferRead,
+                        unsigned char *tmpFile
+                    );
+
+void fillCameraSelectedDefault(structCamSelected* camSelected);
 
 void debugMsg( std::string msg );
 
@@ -23,5 +35,9 @@ bool funcRaspIsIP( std::string ipCandidate );
 int funcReceiveOnePositiveInteger(int sockfd);
 
 std::string *genCommand(strReqImg *reqImg, const std::string& fileName);
+
+int obtainFile(std::string remoteFile, std::string localFile, QProgressBar* progressBar );
+u_int8_t* funcQtReceiveFile(std::string fileNameRequested, int* fileLen , QProgressBar *progressBar);
+
 
 #endif // RASPHYPCAM_H

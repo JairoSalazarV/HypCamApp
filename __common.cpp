@@ -32,6 +32,7 @@
 
 #include <QFileDialog>
 #include <QImage>
+#include <QProgressBar>
 
 
 
@@ -962,7 +963,6 @@ bool funcIsIP( std::string ipCandidate ){
     }
 }
 
-
 void QtDelay( unsigned int ms ){
     QTime dieTime= QTime::currentTime().addMSecs(ms);
     while (QTime::currentTime() < dieTime){
@@ -1267,7 +1267,7 @@ int funcPrintRectangle(QString title, squareAperture* rectangle)
     return 1;
 }
 
-void funcNDVI( QImage* imgToNDVI, double lowerBound, int brilliant )
+void funcNDVI( QImage* imgToNDVI, double lowerBound, int brilliant, QProgressBar* progBar )
 {
     //......................................
     // Get Infrared Weight
@@ -1315,8 +1315,10 @@ void funcNDVI( QImage* imgToNDVI, double lowerBound, int brilliant )
     range   = 1.0 - lowerBound;
     double infraredSensed;
     double redSensed;
+    int aux;
+    progBar->setVisible(true);
     for( x=0; x<imgToNDVI->width(); x++ )
-    {
+    {        
         for( y=0; y<imgToNDVI->height(); y++ )
         {
             //Calculate NDVI
@@ -1389,9 +1391,17 @@ void funcNDVI( QImage* imgToNDVI, double lowerBound, int brilliant )
             maxNDVI     = (NDVI>maxNDVI)?NDVI:maxNDVI;
             minNDVI     = (NDVI<minNDVI)?NDVI:minNDVI;
         }
+
+        aux = round( ((float)x/(float)imgToNDVI->width())*99.0 );
+        //progBar->setValue(aux);
+        //progBar->update();
+        //QtDelay(1);
+
+
     }
     qDebug() << "maxNDVI: " << maxNDVI;
     qDebug() << "minNDVI: " << minNDVI;
+    progBar->setVisible(false);
 
     //......................................
     // Remark identified plat pixels
@@ -1784,7 +1794,7 @@ QString funcGetParam(QString field, QString defaultValue, bool *ok = Q_NULLPTR)
 void funcSetFileDB()
 {
     QList<QString> lstFolders;
-    lstFolders << "XML" << "SYNC" << "./XML/camPerfils/" << "settings" << "./settings/lastPaths/" << "./settings/NDVI/";
+    lstFolders << "./settings/NDVI/" << "XML" << "SYNC" << "./XML/camPerfils/" << "settings" << "./settings/lastPaths/" << "./settings/NDVI/" << "tmpSnapshots" << "tmpImages";
     for( int i=0; i<lstFolders.size(); i++ )
     {
         if( !QDir( lstFolders.at(i) ).exists() )

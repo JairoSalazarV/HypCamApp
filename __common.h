@@ -21,6 +21,8 @@
     #include <QFileInfo>
     #include <QtNetwork/QTcpSocket>
 
+    #include <QProgressBar>
+
     //QPoint *calibPoint( QPoint *point, lstDoubleAxisCalibration *calib );
 
     double funcDet2x2(double **M);
@@ -143,7 +145,7 @@
 
     void displayImageFullScreen(QImage *tmpImg );
 
-    void funcNDVI(QImage *imgToNDVI , double lowerBound, int brilliant);
+    void funcNDVI(QImage *imgToNDVI , double lowerBound, int brilliant, QProgressBar *progBar);
 
     int funcReadAnalysePlot( structAnalysePlotSaved* structPlotSaved );
 

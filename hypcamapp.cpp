@@ -11,10 +11,12 @@
 #include <rasphypcam.h>
 #include <formtimertxt.h>
 #include <formcreatenewfile.h>
+#include <formimageedition.h>
+#include <formndvisettings.h>
 
 //structSettings *lstSettings = (structSettings*)malloc(sizeof(structSettings));
 structRaspcamSettings *mainRaspcamSettings = (structRaspcamSettings*)malloc(sizeof(structRaspcamSettings));
-structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+//structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
 
 HypCamApp::HypCamApp(QWidget *parent) :
     QMainWindow(parent),
@@ -22,12 +24,13 @@ HypCamApp::HypCamApp(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    /*
     //Set Camera Default Parameters
     camSelected->isConnected = true;
     camSelected->On = true;
     camSelected->tcpPort = 51717;
     memset(camSelected->IP,'\0',15);
-    memcpy(camSelected->IP,"172.24.1.1",strlen("172.24.1.1"));
+    memcpy(camSelected->IP,"172.24.1.1",strlen("172.24.1.1"));*/
 
     //Set FileDB
     funcSetFileDB();
@@ -51,7 +54,11 @@ void HypCamApp::on_pbCamConn_clicked()
         return (void)false;
     }
 
-    //Validating IP
+    //Fill Camera's Data
+    structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+    fillCameraSelectedDefault(camSelected);
+
+    //Validatin IP
     QString IP((const char*)camSelected->IP);
     if( !funcIsIP( IP.toStdString() ) ){
         funcShowMsg("ERROR","Invalid IP address");
@@ -78,6 +85,10 @@ void HypCamApp::on_pbShutdown_clicked()
     {
         std::string cmdShutdown = "sudo shutdown -h now";
         bool ok;
+
+        //Fill Camera's Data
+        structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+        fillCameraSelectedDefault(camSelected);
 
         funcRemoteTerminalCommand(cmdShutdown,camSelected,0,false,&ok);
         if(ok == true)
@@ -160,72 +171,6 @@ std::string HypCamApp::funcRemoteTerminalCommand(
     return tmpTxt;
 }
 
-
-
-bool HypCamApp::funcReceiveFile(
-                                    int sockfd,
-                                    unsigned int fileLen,
-                                    unsigned char *bufferRead,
-                                    unsigned char *tmpFile
-){
-
-    qDebug() << "Inside funcReceiveFile sockfd: " << sockfd;
-
-
-
-    //Requesting file
-    int i, n;
-
-    n = ::write(sockfd,"sendfile",8);
-    if (n < 0){
-        qDebug() << "ERROR: writing to socket";
-        return false;
-    }
-
-
-
-    //Receive file parts
-    unsigned int numMsgs = (fileLen>0)?floor( (float)fileLen / (float)frameBodyLen ):0;
-    numMsgs = ((numMsgs*frameBodyLen)<fileLen)?numMsgs+1:numMsgs;
-    unsigned int tmpPos = 0;
-    memset(tmpFile,'\0',fileLen);
-    qDebug() << "Receibing... " <<  QString::number(numMsgs) << " messages";
-    qDebug() << "fileLen: " << fileLen;
-
-    //Receive the last
-    if(numMsgs==0){
-        //Receives the unik message
-        bzero(bufferRead,frameBodyLen);
-        //qDebug() << "R1";
-        //n = read(sockfd,tmpFile,fileLen);
-    }else{
-
-        for(i=1;i<=(int)numMsgs;i++){
-            bzero(bufferRead,frameBodyLen);
-            n = read(sockfd,bufferRead,frameBodyLen);
-            //qDebug() << "n: " << n;
-            if(n!=(int)frameBodyLen&&i<(int)numMsgs){
-                qDebug() << "ERROR, message " << i << "WRONG";
-                return false;
-            }
-            //Append message to file
-            memcpy( &tmpFile[tmpPos], bufferRead, frameBodyLen );
-            tmpPos += n;
-            //Request other part
-            if( i<(int)numMsgs ){
-                //qDebug() << "W2";
-                QtDelay(2);
-                n = ::write(sockfd,"sendpart",8);
-                if(n<0){
-                    qDebug() << "ERROR: Sending part-file request";
-                    return false;
-                }
-            }
-        }
-    }
-
-    return true;
-}
 
 void HypCamApp::funcShowMsg_Timeout(QString title, QString msg, int ms)
 {
@@ -369,6 +314,10 @@ void HypCamApp::funcMainCall_RecordVideo(QString* videoID, bool defaultPath, boo
         //Prepare Remote Scenary
         //---------------------------------------------------
 
+        //Fill Camera's Data
+        structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+        fillCameraSelectedDefault(camSelected);
+
         //Delete Remote File if Exists
         *videoID = _PATH_REMOTE_FOLDER_VIDEOS + *videoID + _VIDEO_EXTENSION;
         QString tmpCommand;
@@ -396,6 +345,10 @@ void HypCamApp::funcMainCall_RecordVideo(QString* videoID, bool defaultPath, boo
     QString getRemVidCommand = genRemoteVideoCommand(mainRaspcamSettings,*videoID,ROI);
 
     //funcShowMsgSUCCESS_Timeout(getRemVidCommand,4000);
+
+    //Fill Camera's Data
+    structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+    fillCameraSelectedDefault(camSelected);
 
 
     // Execute Remote Command
@@ -728,6 +681,10 @@ void HypCamApp::funcMainCall_GetSnapshot()
     //Prepare Remote Scenary
     //--------------------------------------
 
+    //Fill Camera's Data
+    structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+    fillCameraSelectedDefault(camSelected);
+
     //Delete Remote File if Exists
     fileName = _PATH_REMOTE_FOLDER_SNAPSHOTS + fileName + _SNAPSHOT_REMOTE_EXTENSION;
     QString tmpCommand;
@@ -808,6 +765,12 @@ int HypCamApp::takeRemoteSnapshot( QString fileDestiny, bool squareArea )
     //--------------------------------------
     //Take Remote Photo
     //--------------------------------------
+
+    //Fill Camera's Data
+    structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+    fillCameraSelectedDefault(camSelected);
+
+    //
     bool executedCommand;
     funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&executedCommand);
     if( !executedCommand )
@@ -862,13 +825,13 @@ void HypCamApp::on_pbExit_clicked()
 
 void HypCamApp::on_pbSynSettings_clicked()
 {
-    if( obtainFile( _PATH_REMOTE_SLIDESETTINGS, _PATH_LOCAL_SLIDESETTINGS ) )
+    if( obtainFile( _PATH_REMOTE_SLIDESETTINGS, _PATH_LOCAL_SLIDESETTINGS, Q_NULLPTR ) )
         funcShowMsgSUCCESS_Timeout("Synchronization Successfully");
     else
         funcShowMsgERROR_Timeout("Sorry, Synchronization not Completed");
 }
 
-
+/*
 int HypCamApp::obtainFile(std::string remoteFile, std::string localFile )
 {
     if( funcRaspFileExists( remoteFile ) == 0 )
@@ -892,7 +855,9 @@ int HypCamApp::obtainFile(std::string remoteFile, std::string localFile )
     }
     return _OK;
 }
+*/
 
+/*
 u_int8_t* HypCamApp::funcQtReceiveFile( std::string fileNameRequested, int* fileLen )
 {
 
@@ -952,4 +917,18 @@ u_int8_t* HypCamApp::funcQtReceiveFile( std::string fileNameRequested, int* file
     return theFILE;
 
 
+}*/
+
+void HypCamApp::on_pbImgEdition_clicked()
+{
+    formImageEdition* tmpForm = new formImageEdition(this);
+    tmpForm->setModal(true);
+    tmpForm->show();
+}
+
+void HypCamApp::on_pbNDVISettings_clicked()
+{
+    formNDVISettings* tmpForm = new formNDVISettings(this);
+    tmpForm->setModal(true);
+    tmpForm->show();
 }

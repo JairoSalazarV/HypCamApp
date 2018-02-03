@@ -31,7 +31,9 @@ SOURCES += \
     formsettings.cpp \
     rasphypcam.cpp \
     formtimertxt.cpp \
-    formcreatenewfile.cpp
+    formcreatenewfile.cpp \
+    formimageedition.cpp \
+    formndvisettings.cpp
 
 HEADERS += \
         hypcamapp.h \
@@ -46,13 +48,17 @@ HEADERS += \
     rasphypcam.h \
     formtimertxt.h \
     formcreatenewfile.h \
-    lstpaths.h
+    lstpaths.h \
+    formimageedition.h \
+    formndvisettings.h
 
 FORMS += \
         hypcamapp.ui \
     formsettings.ui \
     formtimertxt.ui \
-    formcreatenewfile.ui
+    formcreatenewfile.ui \
+    formimageedition.ui \
+    formndvisettings.ui
 
 CONFIG += mobility
 MOBILITY = 

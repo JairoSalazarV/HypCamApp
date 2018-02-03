@@ -29,12 +29,13 @@ private slots:
                                                 bool* ok
                                          );
 
+    /*
     bool funcReceiveFile(
                             int sockfd,
                             unsigned int fileLen,
                             unsigned char *bufferRead,
                             unsigned char *tmpFile
-                        );
+                        );*/
 
     void on_pbSettings_clicked();
 
@@ -77,9 +78,13 @@ private slots:
 
     void on_pbSynSettings_clicked();
 
-    int obtainFile(std::string remoteFile, std::string localFile );
+    //int obtainFile(std::string remoteFile, std::string localFile );
 
-    u_int8_t* funcQtReceiveFile(std::string fileNameRequested, int* fileLen );
+    //u_int8_t* funcQtReceiveFile(std::string fileNameRequested, int* fileLen );
+
+    void on_pbImgEdition_clicked();
+
+    void on_pbNDVISettings_clicked();
 
 private:
     Ui::HypCamApp *ui;

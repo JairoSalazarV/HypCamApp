@@ -194,4 +194,8 @@
 
 
 
+    //structRaspcamSettings *mainRaspcamSettings = (structRaspcamSettings*)malloc(sizeof(structRaspcamSettings));
+
+
+
 #endif // __COMMON_H

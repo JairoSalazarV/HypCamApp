@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>formLstCustoms</class>
+ <widget class="QDialog" name="formLstCustoms">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>840</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Customs</string>
+  </property>
+  <widget class="QPushButton" name="pbGetSlideSettings">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>20</y>
+     <width>480</width>
+     <height>85</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Get Remote Slide Settings</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pbCreateFile">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>120</y>
+     <width>480</width>
+     <height>85</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Create New File</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

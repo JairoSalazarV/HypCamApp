@@ -433,73 +433,6 @@
     <normaloff>:/androidImages/hypCube.png</normaloff>:/androidImages/hypCube.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pbCamConn">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>150</y>
-      <width>130</width>
-      <height>130</height>
-     </rect>
-    </property>
-    <property name="palette">
-     <palette>
-      <active>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </active>
-      <inactive>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </inactive>
-      <disabled>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </disabled>
-     </palette>
-    </property>
-    <property name="whatsThis">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera connection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="images.qrc">
-      <normaloff>:/androidImages/testCamera.png</normaloff>
-      <disabledoff>:/androidImages/testCamera.png</disabledoff>:/androidImages/testCamera.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>130</width>
-      <height>130</height>
-     </size>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pbShutdown">
     <property name="geometry">
      <rect>
@@ -570,7 +503,7 @@
    <widget class="QPushButton" name="pbSettings">
     <property name="geometry">
      <rect>
-      <x>181</x>
+      <x>10</x>
       <y>150</y>
       <width>130</width>
       <height>130</height>
@@ -627,207 +560,6 @@
       <normaloff>:/androidImages/settings.png</normaloff>
       <disabledoff>:/androidImages/settings.png</disabledoff>
       <disabledon>:/androidImages/settings.png</disabledon>:/androidImages/settings.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>130</width>
-      <height>130</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pbVideo">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>310</y>
-      <width>130</width>
-      <height>130</height>
-     </rect>
-    </property>
-    <property name="palette">
-     <palette>
-      <active>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </active>
-      <inactive>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </inactive>
-      <disabled>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </disabled>
-     </palette>
-    </property>
-    <property name="whatsThis">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera connection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="images.qrc">
-      <normaloff>:/androidImages/Video.png</normaloff>
-      <disabledoff>:/androidImages/Video.png</disabledoff>:/androidImages/Video.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>130</width>
-      <height>130</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pbCreateFile">
-    <property name="geometry">
-     <rect>
-      <x>337</x>
-      <y>150</y>
-      <width>130</width>
-      <height>130</height>
-     </rect>
-    </property>
-    <property name="palette">
-     <palette>
-      <active>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </active>
-      <inactive>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </inactive>
-      <disabled>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </disabled>
-     </palette>
-    </property>
-    <property name="whatsThis">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera connection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="images.qrc">
-      <normaloff>:/androidImages/newFile.png</normaloff>
-      <disabledoff>:/androidImages/newFile.png</disabledoff>:/androidImages/newFile.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>130</width>
-      <height>130</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pbSnapshot">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>310</y>
-      <width>130</width>
-      <height>130</height>
-     </rect>
-    </property>
-    <property name="palette">
-     <palette>
-      <active>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </active>
-      <inactive>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </inactive>
-      <disabled>
-       <colorrole role="Light">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>238</red>
-          <green>238</green>
-          <blue>236</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </disabled>
-     </palette>
-    </property>
-    <property name="whatsThis">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera connection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="images.qrc">
-      <normaloff>:/androidImages/photo.png</normaloff>
-      <disabledoff>:/androidImages/photo.png</disabledoff>:/androidImages/photo.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -907,8 +639,8 @@
    <widget class="QPushButton" name="pbSynSettings">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>300</y>
+      <x>180</x>
+      <y>150</y>
       <width>130</width>
       <height>130</height>
      </rect>
@@ -974,8 +706,8 @@
    <widget class="QPushButton" name="pbImgEdition">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>450</y>
+      <x>340</x>
+      <y>140</y>
       <width>130</width>
       <height>130</height>
      </rect>
@@ -1038,11 +770,11 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="pbNDVISettings">
+   <widget class="QPushButton" name="pbAnalysis">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>450</y>
+      <x>180</x>
+      <y>320</y>
       <width>130</width>
       <height>130</height>
      </rect>
@@ -1096,7 +828,8 @@
     <property name="icon">
      <iconset resource="images.qrc">
       <normaloff>:/androidImages/ndviSettings.png</normaloff>
-      <disabledoff>:/androidImages/photogallery.png</disabledoff>:/androidImages/ndviSettings.png</iconset>
+      <disabledoff>:/androidImages/ndviSettings.png</disabledoff>
+      <disabledon>:/androidImages/ndviSettings.png</disabledon>:/androidImages/ndviSettings.png</iconset>
     </property>
     <property name="iconSize">
      <size>

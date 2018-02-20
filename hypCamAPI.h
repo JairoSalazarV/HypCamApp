@@ -5,7 +5,7 @@
     #include "__common.h"
     #include <string>
 
-    void funcValCam( std::string IP, int portno, camSettings *tmpCamSett );
+    void funcValCam(std::string IP, int portno, camSettings *tmpCamSett, QWidget *parent);
 
     //void funcRGBImageToArray(uchar **r, uchar **g, uchar **b, QImage* img );
 

@@ -16,6 +16,9 @@
 
 #include <__common.h>
 #include <QProgressBar>
+#include <QMessageBox>
+#include <QTimer>
+#include <formtimertxt.h>
 
 bool funcReceiveFile(
                         int sockfd,
@@ -581,4 +584,545 @@ u_int8_t* funcQtReceiveFile( std::string fileNameRequested, int* fileLen, QProgr
     return theFILE;
 
 
+}
+
+std::string funcRemoteTerminalCommand(
+                                            std::string command,
+                                            structCamSelected *camSelected,
+                                            int trigeredTime,
+                                            bool waitForAnswer,
+                                            bool* ok
+){
+    //* It is used when waitForAnswer==true
+    //* Wait for answer when you need to know a parameter or the
+    //  command result
+    *ok = true;
+    std::string tmpTxt;
+
+    //--------------------------------------
+    //Open socket
+    //--------------------------------------
+    int n;
+    int sockfd = connectSocket( camSelected );
+    qDebug() << "Socket opened";
+
+    //--------------------------------------
+    //Excecute command
+    //--------------------------------------
+    frameStruct *frame2send = (frameStruct*)malloc(sizeof(frameStruct));
+    memset(frame2send,'\0',sizeof(frameStruct));
+    frame2send->header.idMsg        = (waitForAnswer==true)?(unsigned char)2:(unsigned char)5;
+    frame2send->header.trigeredTime = trigeredTime;
+    frame2send->header.numTotMsg    = 1;
+    frame2send->header.consecutive  = 1;
+    frame2send->header.bodyLen      = command.length();
+    bzero(frame2send->msg,command.length()+1);
+    memcpy( frame2send->msg, command.c_str(), command.length() );
+
+    //Request command result
+    n = ::write(sockfd,frame2send,sizeof(frameStruct)+1);
+    if(n<0){
+        qDebug() << "ERROR: Excecuting Remote Command";
+        *ok = false;
+        return "";
+    }
+
+    //Receibing ack with file len
+    unsigned char bufferRead[frameBodyLen];
+    n = read(sockfd,bufferRead,frameBodyLen);
+
+    if( waitForAnswer == true )
+    {
+        unsigned int fileLen;
+        memcpy(&fileLen,&bufferRead,sizeof(unsigned int));
+        fileLen = (fileLen<frameBodyLen)?frameBodyLen:fileLen;
+        qDebug() << "fileLen: " << fileLen;
+        //funcShowMsg("FileLen n("+QString::number(n)+")",QString::number(fileLen));
+
+        //Receive File
+        unsigned char tmpFile[fileLen];
+        if( funcReceiveFile( sockfd, fileLen, bufferRead, tmpFile ) == false )
+        {
+            *ok = false;
+        }
+        tmpTxt.clear();
+        tmpTxt.assign((char*)tmpFile);
+        qDebug() <<tmpFile;
+    }
+    ::close(sockfd);
+
+    //Return Command Result
+    return tmpTxt;
+}
+
+int takeRemoteSnapshot(
+                            QString fileDestiny,
+                            bool squareArea,
+                            structRaspcamSettings* mainRaspcamSettings,
+                            QWidget* parent
+){
+
+    //
+    // Get cam resolution
+    //
+    camRes = getCamRes(mainRaspcamSettings->CameraMp);
+
+    //
+    //Generates Camera Command
+    //..
+    structRaspistillCommand* structRaspiCommand = (structRaspistillCommand*)malloc(sizeof(structRaspistillCommand));
+    strReqImg *reqImg                           = (strReqImg*)malloc(sizeof(strReqImg));
+    memset(reqImg,'\0',sizeof(strReqImg));
+    memset(structRaspiCommand,'\0',sizeof(structRaspistillCommand));
+    structRaspiCommand->idMsg                   = (unsigned char)4;
+    reqImg->squApert                            = squareArea;
+    reqImg->raspSett                            = funcFillSnapshotSettings( reqImg->raspSett, mainRaspcamSettings );
+    reqImg->imgCols                             = camRes->width;//2592 | 640
+    reqImg->imgRows                             = camRes->height;//1944 | 480
+    reqImg->raspSett.Flipped                    = (mainRaspcamSettings->Flipped==1)?1:0;
+
+    //--------------------------------------
+    //Create Command
+    //--------------------------------------
+    QString tmpCommand;
+    tmpCommand = genCommand(reqImg, fileDestiny.toStdString())->c_str();
+
+    //--------------------------------------
+    //Take Remote Photo
+    //--------------------------------------
+
+    //Fill Camera's Data
+    structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+    fillCameraSelectedDefault(camSelected);
+
+    //
+    bool executedCommand;
+    funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&executedCommand);
+    if( !executedCommand )
+    {
+        funcShowMsgERROR_Timeout("Applying Remote Snapshot Command", parent);
+        return -1;
+    }
+
+    return 1;
+}
+
+structRaspcamSettings funcFillSnapshotSettings( structRaspcamSettings raspSett, structRaspcamSettings* mainRaspcamSettings )
+{
+    //Take settings from gui ;D
+    //raspSett.width                 = ui->slideWidth->value();
+    //raspSett.height                = ui->slideHeight->value();
+    memcpy(
+                raspSett.AWB,
+                mainRaspcamSettings->AWB,
+                sizeof(raspSett.AWB)
+          );
+    //raspSett.Brightness            = ui->slideBrightness->value();
+    //raspSett.Contrast              = ui->slideContrast->value();
+    memcpy(
+                raspSett.Exposure,
+                mainRaspcamSettings->Exposure,
+                sizeof(raspSett.Exposure)
+          );
+    //raspSett.ExposureCompensation     = ui->slideExpComp->value();
+    //raspSett.Format                   = ( ui->rbFormat1->isChecked() )?1:2;
+    //raspSett.Green                    = ui->slideGreen->value();
+    raspSett.ISO                        = mainRaspcamSettings->ISO;
+    //raspSett.Red                      = ui->slideRed->value();
+    //raspSett.Saturation               = ui->slideSaturation->value();
+    //raspSett.Sharpness                = ui->slideSharpness->value();
+    raspSett.ShutterSpeedMs             = mainRaspcamSettings->ShutterSpeedMs;
+    raspSett.SquareShutterSpeedMs       = mainRaspcamSettings->SquareShutterSpeedMs;
+    raspSett.Denoise                    = mainRaspcamSettings->Denoise;
+    raspSett.ColorBalance               = mainRaspcamSettings->ColorBalance;
+    raspSett.TriggeringTimeSecs         = mainRaspcamSettings->TriggeringTimeSecs;
+
+    return raspSett;
+}
+
+cameraResolution* getCamRes( int camResSetting )
+{
+    //cameraResolution* camRes;
+    //camRes = (cameraResolution*)malloc(sizeof(cameraResolution));
+
+    if( camResSetting == 5 )
+    {
+        //#define _BIG_WIDTH 2592 //2592 | 640 | 320
+        //#define _BIG_HEIGHT 1944 //1944 | 480 | 240
+        camRes->width   = _RASP_CAM_5MP_IMAGE_W;
+        camRes->height  = _RASP_CAM_5MP_IMAGE_H;
+        camRes->videoW  = _RASP_CAM_5MP_VIDEO_W; //1920 | 1640
+        camRes->videoH  = _RASP_CAM_5MP_VIDEO_H; //1080 | 1232
+    }
+
+    if( camResSetting == 8 )
+    {
+        //https://www.raspberrypi.org/forums/viewtopic.php?t=145815
+        camRes->width   = _RASP_CAM_8MP_IMAGE_W;
+        camRes->height  = _RASP_CAM_8MP_IMAGE_H;
+        camRes->videoW  = _RASP_CAM_8MP_VIDEO_W; //1920 | 1640
+        camRes->videoH  = _RASP_CAM_8MP_VIDEO_H; //1080 | 1232
+    }
+
+    return camRes;
+
+}
+
+
+void funcShowMsg_Timeout(QString title, QString msg, QWidget* parent, int ms)
+{
+    QMessageBox *msgBox         = new QMessageBox(QMessageBox::Warning,title,msg,NULL);
+    QTimer *msgBoxCloseTimer    = new QTimer(parent);
+    msgBoxCloseTimer->setInterval(ms);
+    msgBoxCloseTimer->setSingleShot(true);
+    QObject::connect(msgBoxCloseTimer, SIGNAL(timeout()), msgBox, SLOT(reject()));
+    msgBoxCloseTimer->start();
+    msgBox->exec();
+}
+
+void funcShowMsgSUCCESS_Timeout(QString msg, QWidget* parent, int ms)
+{
+    QMessageBox *msgBox         = new QMessageBox(QMessageBox::Warning,"SUCCESS",msg,NULL);
+    QTimer *msgBoxCloseTimer    = new QTimer(parent);
+    msgBoxCloseTimer->setInterval(ms);
+    msgBoxCloseTimer->setSingleShot(true);
+    QObject::connect(msgBoxCloseTimer, SIGNAL(timeout()), msgBox, SLOT(reject()));
+    msgBoxCloseTimer->start();
+    msgBox->exec();
+}
+
+void funcShowMsgERROR_Timeout(QString msg, QWidget* parent, int ms)
+{
+    QMessageBox *msgBox         = new QMessageBox(QMessageBox::Warning,"ERROR",msg,NULL);
+    QTimer *msgBoxCloseTimer    = new QTimer(parent);
+    msgBoxCloseTimer->setInterval(ms);
+    msgBoxCloseTimer->setSingleShot(true);
+    QObject::connect(msgBoxCloseTimer, SIGNAL(timeout()), msgBox, SLOT(reject()));
+    msgBoxCloseTimer->start();
+    msgBox->exec();
+}
+
+void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, bool defaultPath, bool ROI)
+{
+    bool commandExecuted;
+
+    videoID->clear();
+
+    //---------------------------------------------------
+    //Get Last Camera Settings
+    //---------------------------------------------------
+    if( funcGetRaspCamParameters(parent) != _OK )
+        return (void)false;
+
+    //---------------------------------------------------
+    //Get Video-ID Destine
+    //---------------------------------------------------
+    if( defaultPath )
+    {
+        videoID->append(_PATH_VIDEO_REMOTE_H264);
+    }
+    else
+    {
+        parent->setVisible(false);
+        *videoID = funcGetParam("Video-ID");
+        if(videoID->isEmpty())
+        {
+            funcShowMsgERROR_Timeout("Invalid Video-ID",parent);
+            parent->setVisible(true);
+            return (void)false;
+        }
+
+        //---------------------------------------------------
+        //Validate File/Dir Name
+        //---------------------------------------------------
+        QString remoteFile, localFile;
+        remoteFile.append(_PATH_REMOTE_FOLDER_VIDEOS);
+        remoteFile.append(*videoID);
+        remoteFile.append(_VIDEO_EXTENSION);
+
+        //Local File
+        QString syncLocalFolder = funcGetSyncFolder();
+        localFile.clear();
+        localFile.append(syncLocalFolder);
+        localFile.append(_PATH_REMOTE_FOLDER_VIDEOS);
+        localFile.append(videoID);
+        localFile.append(_VIDEO_EXTENSION);
+
+        //Check if exists
+        int itExists = funcValidateFileDirNameDuplicated( remoteFile, localFile );
+        if( itExists != _OK )
+        {
+            if( itExists == -1 )
+                funcShowMsgERROR_Timeout("Video-ID Exists Locally: Please, use another", parent);
+            else
+                funcShowMsgERROR_Timeout("Video-ID Exists Remotelly: Please, use another", parent);
+            parent->setVisible(true);
+            return (void)false;
+        }
+
+        //---------------------------------------------------
+        //Prepare Remote Scenary
+        //---------------------------------------------------
+
+        //Fill Camera's Data
+        structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+        fillCameraSelectedDefault(camSelected);
+
+        //Delete Remote File if Exists
+        *videoID = _PATH_REMOTE_FOLDER_VIDEOS + *videoID + _VIDEO_EXTENSION;
+        QString tmpCommand;
+        tmpCommand.clear();
+        tmpCommand.append("sudo rm "+ *videoID);
+        funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&commandExecuted);
+        if( !commandExecuted )
+        {
+            funcShowMsgERROR_Timeout("Deleting Remote videoID",parent);
+            return (void)false;
+        }
+    }
+
+    //-----------------------------------------------------
+    // Save snapshots settings
+    //-----------------------------------------------------
+    // Get camera resolution
+    camRes = getCamRes( mainRaspcamSettings->CameraMp );
+
+    //-----------------------------------------------------
+    //Start to Record Remote Video
+    //-----------------------------------------------------
+
+    // Generate Video Command
+    QString getRemVidCommand = genRemoteVideoCommand(mainRaspcamSettings,*videoID,ROI);
+
+    //funcShowMsgSUCCESS_Timeout(getRemVidCommand,4000);
+
+    //Fill Camera's Data
+    structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+    fillCameraSelectedDefault(camSelected);
+
+
+    // Execute Remote Command
+    funcRemoteTerminalCommand(
+                                getRemVidCommand.toStdString(),
+                                camSelected,
+                                mainRaspcamSettings->TriggeringTimeSecs,
+                                false,
+                                &commandExecuted
+                            );
+    if( !commandExecuted )
+    {
+        funcShowMsgERROR_Timeout("Starting Remote Recording", parent);
+        return (void)false;
+    }
+
+    //-----------------------------------------------------
+    //Display Timer
+    //-----------------------------------------------------
+    //Before to Start Recording
+    funcDisplayTimer("Countdown to Recording...",mainRaspcamSettings->TriggeringTimeSecs,Qt::black, parent);
+
+    //During Recording
+    funcDisplayTimer("Recording...",mainRaspcamSettings->VideoDurationSecs,Qt::red,parent);
+
+    //Return
+    parent->setVisible(true);
+
+}
+
+int funcDisplayTimer(QString title, int timeMs, QColor color, QWidget* parent)
+{
+    if( timeMs > 0 )
+    {
+        formTimerTxt* timerTxt = new formTimerTxt(parent,title,timeMs,color);
+        timerTxt->setModal(true);
+        timerTxt->show();
+        QtDelay(200);
+        timerTxt->startMyTimer(timeMs);
+    }
+    return 1;
+}
+
+int funcValidateFileDirNameDuplicated(QString remoteFile, QString localFile)
+{
+    qDebug() << "remoteFile: " << remoteFile;
+    qDebug() << "localFile: " << localFile;
+
+    //Check if exists locally
+    if( fileExists(localFile) )
+    {
+        qDebug() << "Exists Locally";
+        return -1;
+    }
+
+    //Check if exists remotelly
+    if( funcRaspFileExists( remoteFile.toStdString() ) == 1 )
+    {
+        qDebug() << "Exists Remotelly";
+        return -2;
+    }
+
+    //File does not exists locally or remotelly
+    return _OK;
+}
+
+QString funcGetSyncFolder()
+{
+    QString tmpParam;
+    if( !readFileParam( _PATH_LAST_SYNC_FOLDER, &tmpParam) )
+    {
+        saveFile(_PATH_LAST_SYNC_FOLDER,_PATH_LOCAL_SYNC_FOLDERS);
+        tmpParam.clear();
+        tmpParam.append(_PATH_LOCAL_SYNC_FOLDERS);
+    }
+    return tmpParam;
+}
+
+int funcGetRaspCamParameters(QWidget* parent)
+{
+    //---------------------------------------------------
+    //Get Last Camera Settings
+    //---------------------------------------------------
+    //Reset Settings
+    memset(mainRaspcamSettings,'\0',sizeof(structRaspcamSettings));
+
+    //Get Setting Filename
+    QString tmpLastCamSettings;
+    if( !readFileParam( _PATH_LAST_CAM_SETTINGS, &tmpLastCamSettings) )
+    {
+        saveFile(_PATH_LAST_CAM_SETTINGS,_PATH_RASPICAM_SETTINGS);
+        tmpLastCamSettings.clear();
+        tmpLastCamSettings.append(_PATH_RASPICAM_SETTINGS);
+    }
+
+    //Initialize camera parameters
+    if ( fileExists( tmpLastCamSettings ) )
+    {
+        funcGetRaspParamFromXML( mainRaspcamSettings, tmpLastCamSettings );
+    }
+    else
+    {
+        funcShowMsg_Timeout("ALERT: It is your first time...","Please, It is necessary to set and save settings.",parent);
+        return _ERROR;
+    }
+
+    return _OK;
+}
+
+QString genRemoteVideoCommand(structRaspcamSettings* raspcamSettings, QString remoteVideo, bool ROI)
+{
+    QString tmpCommand;
+    tmpCommand.append("raspivid -n -t ");
+    tmpCommand.append( QString::number( raspcamSettings->VideoDurationSecs*1000 ) );
+    tmpCommand.append( " -vf -b 50000000 -fps " ); // -b -> bitrate
+    tmpCommand.append( QString::number(_VIDEO_FRAME_RATE) );
+    tmpCommand.append( " -o " );
+    tmpCommand.append( remoteVideo );
+
+    //.................................
+    //Diffraction Area ROI
+    //.................................
+    if( ROI == true )
+    {
+        double W, H;
+        squareAperture *aperture = (squareAperture*)malloc(sizeof(squareAperture));
+        memset(aperture,'\0',sizeof(squareAperture));
+        if( !funGetSquareXML( _PATH_SLIDE_DIFFRACTION, aperture ) )
+        {
+            funcShowMsg("ERROR","Loading Usable Area in Pixels: _PATH_SLIDE_DIFFRACTION");
+            tmpCommand.clear();
+            return tmpCommand;
+        }
+        W = (double)aperture->rectW/(double)aperture->canvasW;
+        H = (double)aperture->rectH/(double)aperture->canvasH;
+        qDebug() << "W: " << W << " H: " << H;
+
+        tmpCommand.append(" -roi ");
+        tmpCommand.append(QString::number((double)aperture->rectX/(double)aperture->canvasW)+",");
+        tmpCommand.append(QString::number((double)aperture->rectY/(double)aperture->canvasH)+",");
+        tmpCommand.append(QString::number(W)+",");
+        tmpCommand.append(QString::number(H));
+
+        //.................................
+        //Image Size
+        //.................................
+        camRes          = getCamRes( raspcamSettings->CameraMp );
+        //Width
+        tmpCommand.append(" -w ");
+        tmpCommand.append(QString::number( aperture->rectW ));
+        //Height
+        tmpCommand.append(" -h ");
+        tmpCommand.append(QString::number( aperture->rectH ));
+    }
+    else
+    {
+        //.................................
+        //Image Size: Full Resolution
+        //.................................
+        camRes          = getCamRes( raspcamSettings->CameraMp );
+        //Width
+        tmpCommand.append(" -w ");
+        tmpCommand.append(QString::number( camRes->videoW ));
+        //Height
+        tmpCommand.append(" -h ");
+        tmpCommand.append(QString::number( camRes->videoH ));
+    }
+
+
+
+    //.................................
+    //Colour balance?
+    //.................................
+    if( raspcamSettings->ColorBalance ){
+        tmpCommand.append(" -ifx colourbalance");
+    }
+
+    //.................................
+    //Denoise?
+    //.................................
+    if( raspcamSettings->Denoise ){
+        tmpCommand.append(" -ifx denoise");
+    }
+
+    //.................................
+    //Diffraction Shuter speed
+    //.................................
+    int shutSpeed = raspcamSettings->ShutterSpeedMs;
+    if( shutSpeed > 0 ){
+        tmpCommand.append(" -ss " + QString::number(shutSpeed));
+    }
+
+    //.................................
+    //AWB
+    //.................................
+    std::string sAWB((char*)raspcamSettings->AWB, sizeof(raspcamSettings->AWB));
+    if( strcmp(sAWB.c_str(),"none") != 0 ){
+        tmpCommand.append(" -awb ");
+        tmpCommand.append(sAWB.c_str());
+    }
+
+    //.................................
+    //Exposure
+    //.................................
+    std::string sExposure((char*)raspcamSettings->Exposure, sizeof(raspcamSettings->Exposure));
+    if( strcmp(sExposure.c_str(),"none") != 0 ){
+        tmpCommand.append(" -ex ");
+        tmpCommand.append(sExposure.c_str());
+    }
+
+    //.................................
+    //ISO
+    //.................................
+    if( raspcamSettings->ISO > 0 ){
+        tmpCommand.append(" -ISO " + QString::number(raspcamSettings->ISO) );
+    }
+
+    //.................................
+    //Flipped
+    //.................................
+    if( raspcamSettings->Flipped ){
+        tmpCommand.append(" -vf " );
+    }
+
+
+    return tmpCommand;
 }

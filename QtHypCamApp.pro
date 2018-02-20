@@ -33,7 +33,11 @@ SOURCES += \
     formtimertxt.cpp \
     formcreatenewfile.cpp \
     formimageedition.cpp \
-    formndvisettings.cpp
+    formndvisettings.cpp \
+    formlstsettings.cpp \
+    formlstcustoms.cpp \
+    formlstcamactions.cpp \
+    formlstalgorithms.cpp
 
 HEADERS += \
         hypcamapp.h \
@@ -50,7 +54,11 @@ HEADERS += \
     formcreatenewfile.h \
     lstpaths.h \
     formimageedition.h \
-    formndvisettings.h
+    formndvisettings.h \
+    formlstsettings.h \
+    formlstcustoms.h \
+    formlstcamactions.h \
+    formlstalgorithms.h
 
 FORMS += \
         hypcamapp.ui \
@@ -58,7 +66,11 @@ FORMS += \
     formtimertxt.ui \
     formcreatenewfile.ui \
     formimageedition.ui \
-    formndvisettings.ui
+    formndvisettings.ui \
+    formlstsettings.ui \
+    formlstcustoms.ui \
+    formlstcamactions.ui \
+    formlstalgorithms.ui
 
 CONFIG += mobility
 MOBILITY = 

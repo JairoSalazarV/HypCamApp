@@ -760,8 +760,8 @@
     </property>
     <property name="icon">
      <iconset resource="images.qrc">
-      <normaloff>:/androidImages/photogallery.png</normaloff>
-      <disabledoff>:/androidImages/photogallery.png</disabledoff>:/androidImages/photogallery.png</iconset>
+      <normaloff>:/androidImages/camConnection.png</normaloff>
+      <disabledoff>:/androidImages/camConnection.png</disabledoff>:/androidImages/camConnection.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -827,9 +827,9 @@
     </property>
     <property name="icon">
      <iconset resource="images.qrc">
-      <normaloff>:/androidImages/ndviSettings.png</normaloff>
-      <disabledoff>:/androidImages/ndviSettings.png</disabledoff>
-      <disabledon>:/androidImages/ndviSettings.png</disabledon>:/androidImages/ndviSettings.png</iconset>
+      <normaloff>:/androidImages/algorithms.png</normaloff>
+      <disabledoff>:/androidImages/algorithms.png</disabledoff>
+      <disabledon>:/androidImages/algorithms.png</disabledon>:/androidImages/algorithms.png</iconset>
     </property>
     <property name="iconSize">
      <size>

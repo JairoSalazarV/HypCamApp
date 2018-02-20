@@ -802,7 +802,7 @@ void funcShowMsgERROR_Timeout(QString msg, QWidget* parent, int ms)
     msgBox->exec();
 }
 
-void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, bool defaultPath, bool ROI)
+void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, QWidget* grandpa, bool defaultPath, bool ROI)
 {
     bool commandExecuted;
 
@@ -823,11 +823,19 @@ void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, bool defaultPat
     }
     else
     {
+        grandpa->setVisible(false);
         parent->setVisible(false);
-        *videoID = funcGetParam("Video-ID");
+
+        QString fileName = QDateTime::currentDateTime().toString("ddMMyyyy_HHmmss");
+        bool ok;
+        fileName = funcGetParam("Video-ID",fileName, &ok);
         if(videoID->isEmpty())
         {
-            funcShowMsgERROR_Timeout("Invalid Video-ID",parent);
+            if(ok==true)
+            {
+                funcShowMsgERROR_Timeout("Invalid Video-ID",parent);
+            }
+            grandpa->setVisible(true);
             parent->setVisible(true);
             return (void)false;
         }
@@ -856,6 +864,7 @@ void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, bool defaultPat
                 funcShowMsgERROR_Timeout("Video-ID Exists Locally: Please, use another", parent);
             else
                 funcShowMsgERROR_Timeout("Video-ID Exists Remotelly: Please, use another", parent);
+            grandpa->setVisible(true);
             parent->setVisible(true);
             return (void)false;
         }
@@ -925,6 +934,7 @@ void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, bool defaultPat
     funcDisplayTimer("Recording...",mainRaspcamSettings->VideoDurationSecs,Qt::red,parent);
 
     //Return
+    grandpa->setVisible(true);
     parent->setVisible(true);
 
 }

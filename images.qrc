@@ -22,5 +22,6 @@
         <file>androidImages/syncSnapshot.png</file>
         <file>androidImages/ndviSettings.png</file>
         <file>androidImages/ndvi.png</file>
+        <file>androidImages/algorithms.png</file>
     </qresource>
 </RCC>

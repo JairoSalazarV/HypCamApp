@@ -260,5 +260,5 @@ int formLstCamActions::funcGetRaspCamParameters()
 void formLstCamActions::on_pbVideoRecording_clicked()
 {
     QString remoteVideoID;
-    funcMainCall_RecordVideo(&remoteVideoID, this);
+    funcMainCall_RecordVideo(&remoteVideoID, this, lstActionsParent);
 }

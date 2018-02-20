@@ -24,8 +24,10 @@ public:
     void funcShowMsgERROR_Timeout(QString msg, int ms);
     void funcShowMsgERROR_Timeout(QString msg);
 
-    void funcUpdateShownImage();
+    //void funcUpdateShownImage();
     void funcUpdateShownImage(QImage imgToShow);
+
+    void updateLastSnapshotAcquired();
 
 private slots:
     void on_pbSynLastSnapshot_clicked();
@@ -35,6 +37,10 @@ private slots:
     //u_int8_t* funcQtReceiveFile( std::string fileNameRequested, int* fileLen );
 
     void on_pbNDVIAlgorithm_clicked();
+
+    void on_pbSaveImage_clicked();
+
+    void on_pbOpenImage_clicked();
 
 private:
     Ui::formImageEdition *ui;

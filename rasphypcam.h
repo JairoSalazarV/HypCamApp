@@ -12,6 +12,8 @@
 //structRaspcamSettings *mainRaspcamSettings = (structRaspcamSettings*)malloc(sizeof(structRaspcamSettings));
 static structRaspcamSettings *mainRaspcamSettings = (structRaspcamSettings*)malloc(sizeof(structRaspcamSettings));
 
+static QImage globalImgToShow;
+
 bool funcReceiveFile(
                         int sockfd,
                         unsigned int fileLen,
@@ -63,7 +65,7 @@ void funcShowMsgSUCCESS_Timeout(QString msg, QWidget* parent, int ms=2000);
 void funcShowMsgERROR_Timeout(QString msg, QWidget* parent, int ms=2000);
 //void funcShowMsgERROR_Timeout(QString msg, QWidget* parent);
 
-void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, bool defaultPath=false, bool ROI=true);
+void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, QWidget* grandpa, bool defaultPath=false, bool ROI=true);
 
 int funcValidateFileDirNameDuplicated(QString remoteFile, QString localFile);
 

@@ -47,6 +47,7 @@
     #define _PATH_LAST_IMG_OPEN                     "./settings/lastPaths/selectImage.hypcam"
     #define _PATH_LAST_IMG_SAVED                    "./settings/lastPaths/savedImage.hypcam"
     #define _PATH_LAST_SYNC_FOLDER                  "./settings/lastPaths/syncFolder.hypcam"
+    #define _PATH_LAST_USED_IMG_FILENAME            "./settings/lastPaths/lastImageOpen.hypcam"
 
     #define _PATH_LAST_CAM_SETTINGS                 "./settings/lastPaths/camSettingsFilename.hypcam"
 

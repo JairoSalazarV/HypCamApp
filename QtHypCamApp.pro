@@ -37,7 +37,8 @@ SOURCES += \
     formlstsettings.cpp \
     formlstcustoms.cpp \
     formlstcamactions.cpp \
-    formlstalgorithms.cpp
+    formlstalgorithms.cpp \
+    formcameraid.cpp
 
 HEADERS += \
         hypcamapp.h \
@@ -58,7 +59,8 @@ HEADERS += \
     formlstsettings.h \
     formlstcustoms.h \
     formlstcamactions.h \
-    formlstalgorithms.h
+    formlstalgorithms.h \
+    formcameraid.h
 
 FORMS += \
         hypcamapp.ui \
@@ -70,7 +72,8 @@ FORMS += \
     formlstsettings.ui \
     formlstcustoms.ui \
     formlstcamactions.ui \
-    formlstalgorithms.ui
+    formlstalgorithms.ui \
+    formcameraid.ui
 
 CONFIG += mobility
 MOBILITY = 

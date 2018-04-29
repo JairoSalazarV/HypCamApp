@@ -39,6 +39,19 @@
     <string>NDVI</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pbCameraIP">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>230</y>
+     <width>480</width>
+     <height>85</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>IP</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

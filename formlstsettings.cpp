@@ -3,6 +3,7 @@
 #include <formsettings.h>
 #include <formndvisettings.h>
 #include <__common.h>
+#include <formcameraid.h>
 
 formLstSettings::formLstSettings(QWidget *parent) :
     QDialog(parent),
@@ -26,6 +27,13 @@ void formLstSettings::on_pbCameraSettings_clicked()
 void formLstSettings::on_pbNDVI_clicked()
 {
     formNDVISettings* tmpForm = new formNDVISettings(this);
+    tmpForm->setModal(true);
+    tmpForm->show();
+}
+
+void formLstSettings::on_pbCameraIP_clicked()
+{
+    formCameraID* tmpForm = new formCameraID(this);
     tmpForm->setModal(true);
     tmpForm->show();
 }

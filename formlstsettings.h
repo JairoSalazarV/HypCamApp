@@ -21,6 +21,8 @@ private slots:
 
     void on_pbNDVI_clicked();
 
+    void on_pbCameraIP_clicked();
+
 private:
     Ui::formLstSettings *ui;
 };

@@ -7,4 +7,6 @@
 
     #define     _FILENAME_SLIDE_DIR_TIME             "time.hypparam"
 
+    #define     _FILENAME_CAMERA_IP                  "lastCamIP.hypparam"
+
 #endif // LSTFILENAMES_H

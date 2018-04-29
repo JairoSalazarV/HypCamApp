@@ -87,11 +87,13 @@ bool funcReceiveFile(
 
 void fillCameraSelectedDefault(structCamSelected* camSelected)
 {
+    QString IP = readAllFile(_FILENAME_CAMERA_IP).trimmed();
+
     camSelected->isConnected = true;
     camSelected->On = true;
     camSelected->tcpPort = 51717;
     memset(camSelected->IP,'\0',15);
-    memcpy(camSelected->IP,"172.24.1.1",strlen("172.24.1.1"));
+    memcpy(camSelected->IP,IP.toStdString().c_str(),IP.size());
 }
 
 u_int8_t* funcRaspReceiveFile( std::string fileNameRequested, int* fileLen )
@@ -826,10 +828,10 @@ void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, QWidget* grandp
         grandpa->setVisible(false);
         parent->setVisible(false);
 
-        QString fileName = QDateTime::currentDateTime().toString("ddMMyyyy_HHmmss");
+        *videoID = QDateTime::currentDateTime().toString("ddMMyyyy_HHmmss");
         bool ok;
-        fileName = funcGetParam("Video-ID",fileName, &ok);
-        if(videoID->isEmpty())
+        *videoID = funcGetParam("Video-ID",*videoID, &ok);
+        if(videoID->trimmed().isEmpty())
         {
             if(ok==true)
             {
@@ -853,7 +855,7 @@ void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, QWidget* grandp
         localFile.clear();
         localFile.append(syncLocalFolder);
         localFile.append(_PATH_REMOTE_FOLDER_VIDEOS);
-        localFile.append(videoID);
+        localFile.append(*videoID);
         localFile.append(_VIDEO_EXTENSION);
 
         //Check if exists
@@ -882,7 +884,13 @@ void funcMainCall_RecordVideo(QString* videoID, QWidget* parent, QWidget* grandp
         QString tmpCommand;
         tmpCommand.clear();
         tmpCommand.append("sudo rm "+ *videoID);
-        funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&commandExecuted);
+        funcRemoteTerminalCommand(
+                                    tmpCommand.toStdString(),
+                                    camSelected,
+                                    0,
+                                    false,
+                                    &commandExecuted
+                                 );
         if( !commandExecuted )
         {
             funcShowMsgERROR_Timeout("Deleting Remote videoID",parent);
@@ -1023,7 +1031,8 @@ QString genRemoteVideoCommand(structRaspcamSettings* raspcamSettings, QString re
     QString tmpCommand;
     tmpCommand.append("raspivid -n -t ");
     tmpCommand.append( QString::number( raspcamSettings->VideoDurationSecs*1000 ) );
-    tmpCommand.append( " -vf -b 50000000 -fps " ); // -b -> bitrate
+    //tmpCommand.append( " -vf -b 50000000 -fps " ); // -b -> bitrate
+    tmpCommand.append( " -b 50000000 -fps " );
     tmpCommand.append( QString::number(_VIDEO_FRAME_RATE) );
     tmpCommand.append( " -o " );
     tmpCommand.append( remoteVideo );

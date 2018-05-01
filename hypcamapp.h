@@ -28,6 +28,10 @@ private slots:
 
     void on_pbAnalysis_clicked();
 
+    void on_pbShutdown_clicked();
+
+    void on_pbExit_clicked();
+
 private:
     Ui::HypCamApp *ui;
 };

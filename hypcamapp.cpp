@@ -7,6 +7,8 @@
 #include <formlstcamactions.h>
 #include <formlstalgorithms.h>
 
+#include <rasphypcam.h>
+
 
 HypCamApp::HypCamApp(QWidget *parent) :
     QMainWindow(parent),
@@ -83,4 +85,48 @@ void HypCamApp::on_pbAnalysis_clicked()
     formLstAlgorithms* tmpForm = new formLstAlgorithms(this);
     tmpForm->setModal(true);
     tmpForm->show();
+}
+
+void HypCamApp::on_pbShutdown_clicked()
+{
+    //--------------------------------------
+    //Request Confirmation
+    //--------------------------------------
+    if( !funcShowMsgYesNo("Alert!","Turn off Camera?") )
+    {
+        return (void)false;
+    }
+
+
+    //--------------------------------------
+    //Prepare Remote Scenary
+    //--------------------------------------
+    //Fill Camera's Data
+    structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
+    fillCameraSelectedDefault(camSelected);
+    //Prepare command
+    QString tmpCommand;
+    tmpCommand.clear();
+    tmpCommand.append("sudo shutdown -h now");
+    bool commandExecuted;
+    funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&commandExecuted);
+    if( commandExecuted )
+    {
+        funcShowMsgSUCCESS_Timeout("Camera Turn Off Successfully", this);
+    }
+    else
+    {
+        funcShowMsgERROR_Timeout("Can not Shutdown", this);
+    }
+}
+
+void HypCamApp::on_pbExit_clicked()
+{
+    //--------------------------------------
+    //Request Confirmation
+    //--------------------------------------
+    if( funcShowMsgYesNo("Alert!","Do you want to exit?") )
+    {
+        exit(0);
+    }
 }
